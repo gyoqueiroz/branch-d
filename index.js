@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict';
  
 const ANSWERS_YES = ['yes', 'y'];
@@ -81,13 +83,14 @@ const errorMessageFromOutput = (errorOutput) => {
   return errorOutput.substr(errorOutput.indexOf(ERROR_PLACE_HOLDER));
 }
 
-module.exports = function () {
-  var location = process.argv[2];
 
-  var exec = require('child_process').exec;
-  exec('(cd ' + location +' && git branch)', (error, stdout, stderr) => {
-    var branches = sanitizeOutput(stdout);
-    makeList(branches);
-  });
-};
+// Main execution
+var location = process.argv[2];
+
+var exec = require('child_process').exec;
+exec('(cd ' + location +' && git branch)', (error, stdout, stderr) => {
+  var branches = sanitizeOutput(stdout);
+  makeList(branches);
+});
+
 
