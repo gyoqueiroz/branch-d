@@ -1,0 +1,14 @@
+{
+  "name": "@gyowanny/branch-d",
+  "version": "1.0.1",
+  "description": "Git Branch Deleter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gyowanny (Geo) Queiroz",
+  "license": "ISC",
+  "dependencies": {
+    "select-shell": "^1.1.3"
+  }
+}
