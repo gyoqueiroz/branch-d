@@ -3,6 +3,11 @@
 'use strict';
  
 const ANSWERS_YES = ['yes', 'y'];
+const TERMINAL_GREEN = '\x1b[32m';
+const TERMINAL_RED = '\x1b[31m';
+const TERMINAL_YELLOW = '\x1b[33m';
+const TERMINAL_RESET = '\x1b[0m';
+const ERROR_PLACE_HOLDER = 'error:';
 
 var list = require('select-shell')(
   {
@@ -20,10 +25,6 @@ var list = require('select-shell')(
   }
 );
 
-const sanitizeOutput = (output) => {
-  return output.trim().split('\n').map((item) => item.trim());
-};
-
 const makeList = (branches) => {
   branches.forEach(function(branch) {
     list.option(branch);
@@ -32,7 +33,7 @@ const makeList = (branches) => {
   
   list.on('select', function(options){
     var rl = require('readline').createInterface(process.stdin, process.stdout);
-    rl.question('Delete the selected branches? ', (answer) => {
+    rl.question('Delete the selected branches? (yes/no) ', (answer) => {
       if (ANSWERS_YES.includes(answer.toLowerCase())) {
         deleteBranches(options.map((option) => option.value.replace('*', '').trim()));
       }
@@ -54,8 +55,8 @@ const deleteBranches = (branches) => {
   branches.forEach((branch) => {
     try {
       var commandOutput = exec('(cd ' + location +' && git branch -d ' + branch + ')', {stdio: 'pipe'}).toString();
-      console.log('****', commandOutput);
-      if (commandOutput.toLowerCase.startsWith('deleted branch')) {
+
+      if (commandOutput.toLowerCase.startsWith('\ndeleted branch')) {
         deleteCount++;
       } else {
         errors.push(errorMessageFromOutput(commandOutput));
@@ -65,32 +66,43 @@ const deleteBranches = (branches) => {
     }
   });
 
-  if (deleteCount > 0) console.log('\x1b[32m', deleteCount + ' branche(s) deleted');
+  if (deleteCount > 0) console.log(TERMINAL_GREEN, deleteCount + ' branche(s) deleted');
   if (errors.length > 0){
-    console.log('\x1b[31m', '\nSome branches could not be deleted:\n');
+    console.log(TERMINAL_RED, '\nSome branches could not be deleted:\n');
     errors.forEach((error) => {
-      console.log('\x1b[31m', '\n=> ', error);
+      console.log(TERMINAL_RED, '\n=> ', error);
     });
-  }
-
-  //Reset terminal color
-  console.log('\x1b[0m');
+  }  
 };
-
-const ERROR_PLACE_HOLDER = 'error:';
 
 const errorMessageFromOutput = (errorOutput) => {
   return errorOutput.substr(errorOutput.indexOf(ERROR_PLACE_HOLDER));
-}
+};
 
+const printInstructions = () => {
+  console.log(TERMINAL_GREEN, "\n* <Up> & <Down> arrows to navigate\n* <Space> to select\n* <Enter> to proceed\n* <Esc> to cancel\n", TERMINAL_RESET);
+};
 
 // Main execution
 var location = process.argv[2];
 
+printInstructions();
+
 var exec = require('child_process').exec;
 exec('(cd ' + location +' && git branch)', (error, stdout, stderr) => {
-  var branches = sanitizeOutput(stdout);
-  makeList(branches);
+  var branches = stdout.trim().split('\n')
+    .map((item) => item.trim())
+    .filter((item) => item);
+
+  if (branches.length === 0) {
+    console.log(TERMINAL_YELLOW, 'No branches found at ', location);
+    process.exit(0);
+  } else {
+    makeList(branches);
+  }
+
+  //Reset terminal color
+  console.log(TERMINAL_RESET);
 });
 
 
