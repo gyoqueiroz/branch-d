@@ -1,6 +1,6 @@
 {
   "name": "@gyowanny/branch-d",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Git Branch Deleter",
   "main": "index.js",
   "bin": {

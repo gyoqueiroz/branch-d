@@ -25,6 +25,16 @@ var list = require('select-shell')(
   }
 );
 
+const printInstructions = () => {
+  console.log(TERMINAL_GREEN, "\n* <Up> & <Down> arrows to navigate\n* <Space> to select\n* <Enter> to proceed\n* <Esc> to cancel\n", TERMINAL_RESET);
+};
+
+const exit = () => {
+  //Reset terminal color
+  console.log(TERMINAL_RESET);
+  process.exit(0);
+}
+
 const makeList = (branches) => {
   branches.forEach(function(branch) {
     list.option(branch);
@@ -37,12 +47,12 @@ const makeList = (branches) => {
       if (ANSWERS_YES.includes(answer.toLowerCase())) {
         deleteBranches(options.map((option) => option.value.replace('*', '').trim()));
       }
-      process.exit(0);
+      exit();
     });
   });
   
   list.on('cancel', function(options){
-    process.exit(0);
+    exit();
   });
 };
 
@@ -79,10 +89,6 @@ const errorMessageFromOutput = (errorOutput) => {
   return errorOutput.substr(errorOutput.indexOf(ERROR_PLACE_HOLDER));
 };
 
-const printInstructions = () => {
-  console.log(TERMINAL_GREEN, "\n* <Up> & <Down> arrows to navigate\n* <Space> to select\n* <Enter> to proceed\n* <Esc> to cancel\n", TERMINAL_RESET);
-};
-
 // Main execution
 var location = process.argv[2];
 
@@ -96,13 +102,11 @@ exec('(cd ' + location +' && git branch)', (error, stdout, stderr) => {
 
   if (branches.length === 0) {
     console.log(TERMINAL_YELLOW, 'No branches found at ', location);
-    process.exit(0);
+    exit();
   } else {
     makeList(branches);
   }
 
-  //Reset terminal color
-  console.log(TERMINAL_RESET);
 });
 
 
