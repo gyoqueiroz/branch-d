@@ -26,7 +26,7 @@ var list = require('select-shell')(
 );
 
 const printInstructions = () => {
-  console.log(TERMINAL_GREEN, "\n* <Up> & <Down> arrows to navigate\n* <Space> to select\n* <Enter> to proceed\n* <Esc> to cancel\n", TERMINAL_RESET);
+  console.log(TERMINAL_GREEN, "\n* <Up> & <Down> arrows to navigate\n* <Space> to select\n* <Enter> to proceed or exit\n* <Esc> to cancel\n", TERMINAL_RESET);
 };
 
 const exit = () => {
@@ -42,6 +42,10 @@ const makeList = (branches) => {
   list.list();
   
   list.on('select', function(options){
+    if (options !== null && options.length === 0) {
+      exit();
+    }
+    
     var rl = require('readline').createInterface(process.stdin, process.stdout);
     rl.question('Delete the selected branches? (yes/no) ', (answer) => {
       if (ANSWERS_YES.includes(answer.toLowerCase())) {
@@ -77,6 +81,7 @@ const deleteBranches = (branches) => {
   });
 
   if (deleteCount > 0) console.log(TERMINAL_GREEN, deleteCount + ' branche(s) deleted');
+
   if (errors.length > 0){
     console.log(TERMINAL_RED, '\nSome branches could not be deleted:\n');
     errors.forEach((error) => {
