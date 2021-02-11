@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/%40gyowanny%2Fbranch-d.svg)](https://badge.fury.io/js/%40gyowanny%2Fbranch-d)
+
 ### Interactive Git Branch Delete Tool
 
 ![](./docs/resources/branch-d.gif)
