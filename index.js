@@ -47,7 +47,7 @@ const makeList = (branches) => {
     }
 
     var rl = require('readline').createInterface(process.stdin, process.stdout);
-    rl.question('Delete the selected branches? (yes/no) ', (answer) => {
+    rl.question('\nDelete the selected branches? (yes/no) ', (answer) => {
       if (ANSWERS_YES.includes(answer.toLowerCase())) {
         deleteBranches(options.map((option) => option.value.replace('*', '').trim()));
       }
@@ -70,7 +70,7 @@ const deleteBranches = (branches) => {
     try {
       var commandOutput = exec('(cd ' + location +' && git branch -d ' + branch + ')', {stdio: 'pipe'}).toString();
 
-      if (commandOutput.toLowerCase.startsWith('\ndeleted branch')) {
+      if (commandOutput.trim().toLowerCase().startsWith('deleted branch')) {
         deleteCount++;
       } else {
         errors.push(errorMessageFromOutput(commandOutput));
@@ -82,6 +82,7 @@ const deleteBranches = (branches) => {
 
   if (deleteCount > 0) console.log(TERMINAL_GREEN, deleteCount + ' branche(s) deleted');
 
+  errors = errors.filter(Boolean);
   if (errors.length > 0) printErrors(errors);
 };
 
@@ -94,12 +95,13 @@ const printErrors = (errors) => {
 
 const errorMessageFromOutput = (errorOutput) => {
   const errorPlaceHolderIndex = errorOutput.indexOf(ERROR_PLACE_HOLDER);
-  return errorPlaceHolderIndex > -1 ? errorOutput.substr(errorPlaceHolderIndex) : errorOutput;
+  if (errorOutput.length <= 1) return null;
+  if (errorPlaceHolderIndex === -1) return errorOutput.trim();
+  return errorOutput.substr(errorPlaceHolderIndex + ERROR_PLACE_HOLDER.length).trim();
 };
 
 const parseLocation = () => {
-  var location = process.argv[2];
-  return location || '.';
+  return process.argv[2] || '.';
 };
 
 // Main execution
