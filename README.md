@@ -1,6 +1,8 @@
 ### Interactive Git Branch Delete Tool
 
-#### Installing
+![](https://github.com/gyoqueiroz/branch-d/docs/resources/branch-gif)
+
+#### Installation
 
 ```
 npm i @gyowanny/branch-d --global
@@ -9,5 +11,5 @@ npm i @gyowanny/branch-d --global
 #### Usage
 
 ```
-branch-d <project_folder> ** if you use . it picks the current folder
+branch-d <project_folder> ** Use . for current folder
 ```
