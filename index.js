@@ -45,7 +45,7 @@ const makeList = (branches) => {
     if (options !== null && options.length === 0) {
       exit();
     }
-    
+
     var rl = require('readline').createInterface(process.stdin, process.stdout);
     rl.question('Delete the selected branches? (yes/no) ', (answer) => {
       if (ANSWERS_YES.includes(answer.toLowerCase())) {
@@ -94,8 +94,13 @@ const errorMessageFromOutput = (errorOutput) => {
   return errorOutput.substr(errorOutput.indexOf(ERROR_PLACE_HOLDER));
 };
 
+const parseLocation = () => {
+  var location = process.argv[2];
+  return location || '.';
+};
+
 // Main execution
-var location = process.argv[2];
+var location = parseLocation();
 
 printInstructions();
 
