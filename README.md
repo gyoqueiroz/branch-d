@@ -1,6 +1,6 @@
 ### Interactive Git Branch Delete Tool
 
-![](https://github.com/gyoqueiroz/branch-d/docs/resources/branch-gif)
+![](./docs/resources/branch-d.gif)
 
 #### Installation
 
