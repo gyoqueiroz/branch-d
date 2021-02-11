@@ -82,16 +82,19 @@ const deleteBranches = (branches) => {
 
   if (deleteCount > 0) console.log(TERMINAL_GREEN, deleteCount + ' branche(s) deleted');
 
-  if (errors.length > 0){
-    console.log(TERMINAL_RED, '\nSome branches could not be deleted:\n');
-    errors.forEach((error) => {
-      console.log(TERMINAL_RED, '\n=> ', error);
-    });
-  }  
+  if (errors.length > 0) printErrors(errors);
 };
 
+const printErrors = (errors) => {
+  console.log(TERMINAL_RED, '\nSome branches could not be deleted:\n');
+  errors.forEach((error) => {
+    console.log(TERMINAL_RED, '\n=> ', error);
+  });
+}
+
 const errorMessageFromOutput = (errorOutput) => {
-  return errorOutput.substr(errorOutput.indexOf(ERROR_PLACE_HOLDER));
+  const errorPlaceHolderIndex = errorOutput.indexOf(ERROR_PLACE_HOLDER);
+  return errorPlaceHolderIndex > -1 ? errorOutput.substr(errorPlaceHolderIndex) : errorOutput;
 };
 
 const parseLocation = () => {
@@ -116,7 +119,6 @@ exec('(cd ' + location +' && git branch)', (error, stdout, stderr) => {
   } else {
     makeList(branches);
   }
-
 });
 
 
