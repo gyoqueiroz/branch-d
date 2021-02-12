@@ -26,7 +26,8 @@ var list = require('select-shell')(
 );
 
 const printInstructions = () => {
-  console.log(TERMINAL_GREEN, "\n* <Up> & <Down> arrows to navigate\n* <Space> to select\n* <Enter> to proceed or exit\n* <Esc> to cancel\n", TERMINAL_RESET);
+  console.log('Version', require('./package.json').version);
+  console.log(TERMINAL_GREEN, "\n* <Up> & <Down> to navigate\n* <Space> to select\n* <Enter> to proceed or exit\n* <Esc> to cancel\n", TERMINAL_RESET);
 };
 
 const exit = () => {
